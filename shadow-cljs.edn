@@ -10,7 +10,9 @@
 
   [binaryage/devtools "1.0.6"]
   [re-frisk "1.6.0"]
-  [cider/cider-nrepl "0.44.0"]]
+  [cider/cider-nrepl "0.44.0"]
+  [org.slf4j/slf4j-simple "1.7.30"]
+  [org.clojars.rutledgepaulv/websocket-fx "0.1.2"]]
 
  :dev-http
  {8280 "resources/public"
@@ -24,9 +26,8 @@
    :modules
    {:app {:init-fn chat-re-frame.core/init}}
    :devtools
-   {:preloads [
-               re-frisk.preload]}
+   {:preloads [re-frisk.preload]}
    :dev
    {:compiler-options
     {:closure-defines
-     { }}}}}}
+     {}}}}}}
