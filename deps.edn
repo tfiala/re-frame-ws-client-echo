@@ -1,0 +1,12 @@
+{:paths ["src" "test"]
+ :deps
+ {thheller/shadow-cljs {:mvn/version "2.28.20"}
+  reagent/reagent {:mvn/version "1.1.1"}
+  re-frame/re-frame {:mvn/version "1.4.2"}
+  binaryage/devtools {:mvn/version "1.0.6"}
+  re-frisk/re-frisk {:mvn/version "1.6.0"}
+  cider/cider-nrepl {:mvn/version "0.44.0"}
+  org.slf4j/slf4j-simple {:mvn/version "1.7.30"}
+  tfiala/websocket-fx {:local/root "../websocket-fx"}}}
+  ;; tfiala/websocket-fx {:git/url "https://github.com/tfiala/websocket-fx"
+  ;;                     :git/sha "02c66711a307fa66087bffed5bad7ff48f2f4834"}}

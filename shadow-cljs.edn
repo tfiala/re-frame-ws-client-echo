@@ -2,17 +2,7 @@
 
  :jvm-opts ["-Xmx1G"]
 
- :source-paths ["src" "test"]
-
- :dependencies
- [[reagent "1.1.1"]
-  [re-frame "1.4.2"]
-
-  [binaryage/devtools "1.0.6"]
-  [re-frisk "1.6.0"]
-  [cider/cider-nrepl "0.44.0"]
-  [org.slf4j/slf4j-simple "1.7.30"]
-  [org.clojars.rutledgepaulv/websocket-fx "0.1.2"]]
+ :deps true
 
  :dev-http
  {8280 "resources/public"

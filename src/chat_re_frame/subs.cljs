@@ -11,3 +11,8 @@
  ::messages
  (fn [db]
    (:messages db)))
+
+(re-frame/reg-sub
+ ::websocket-status
+ (fn [db]
+   (:websocket-status db)))
