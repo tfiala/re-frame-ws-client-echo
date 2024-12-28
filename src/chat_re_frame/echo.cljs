@@ -19,8 +19,8 @@
 
 (re-frame/reg-event-fx
  ::ws-incoming-message
- (fn [{:keys [db]} message]
-   (println "echo response received: " message)
+ (fn [{:keys [db]} [_ socket-id message]]
+   (println "echo response received: " message " (socket-id: " socket-id ")")
    {:db (update-in db [:messages] conj message)}))
 
 (re-frame/reg-event-db
@@ -31,8 +31,8 @@
 
 (re-frame/reg-event-fx
  ::send-echo-message
- (fn [_ message]
-   (println "reg-event-fx, message: " message)
+ (fn [_ [_ _ message]]
+   (println "send-echo-message: " message)
    (re-frame/dispatch [::wfx/send-message socket-id {:message message}])))
 
 (defn websocket-status
