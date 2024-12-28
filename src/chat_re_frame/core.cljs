@@ -4,8 +4,7 @@
    [re-frame.core :as re-frame]
    [chat-re-frame.echo :as echo]
    [chat-re-frame.events :as events]
-   [chat-re-frame.config :as config]
-   [chat-re-frame.websocket :as ws]))
+   [chat-re-frame.config :as config]))
 
 (defn dev-setup []
   (when config/debug?
@@ -21,4 +20,4 @@
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
   (mount-root)
-  (ws/start))
+  (echo/start))
