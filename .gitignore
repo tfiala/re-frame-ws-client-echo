@@ -22,3 +22,6 @@
 
 # clojure-lsp cache
 /.lsp/.cache
+
+# cp cache data
+/.cpcache
