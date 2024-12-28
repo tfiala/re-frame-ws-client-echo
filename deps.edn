@@ -7,6 +7,5 @@
   re-frisk/re-frisk {:mvn/version "1.6.0"}
   cider/cider-nrepl {:mvn/version "0.44.0"}
   org.slf4j/slf4j-simple {:mvn/version "1.7.30"}
-  tfiala/websocket-fx {:local/root "../websocket-fx"}}}
-  ;; tfiala/websocket-fx {:git/url "https://github.com/tfiala/websocket-fx"
-  ;;                     :git/sha "02c66711a307fa66087bffed5bad7ff48f2f4834"}}
+  tfiala/websocket-fx {:git/url "https://github.com/tfiala/websocket-fx"
+                       :git/sha "9f2984e03eca3358fde8edda0daeca7fe30e180f"}}}
