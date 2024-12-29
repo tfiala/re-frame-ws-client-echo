@@ -6,10 +6,14 @@
 
 (def socket-id :default)
 
+;; ---
+;; event handlers
+;; ---
+
 (re-frame/reg-event-db
  ::websocket-connected
  (fn [db]
-   (println "event received: websocket connected")
+   ;; (println "event received: websocket connected")
    (assoc db :websocket-status :connected)))
 
 (re-frame/reg-event-db
@@ -19,58 +23,79 @@
 
 (re-frame/reg-event-fx
  ::ws-incoming-message
- (fn [{:keys [db]} [_ socket-id message]]
-   (println "echo response received: " message " (socket-id: " socket-id ")")
+ (fn [{:keys [db]} [_ _socket-id message]]
    {:db (update-in db [:messages] conj message)}))
 
 (re-frame/reg-event-db
- ::echo-timeout
- (fn [db _]
-   (println "echo response timed out")
-   db))
+ ::update-echo-message
+ (fn [db [_ message]]
+   (assoc db :echo-message message)))
 
 (re-frame/reg-event-fx
  ::send-echo-message
  (fn [_ [_ _ message]]
-   (println "send-echo-message: " message)
-   (re-frame/dispatch [::wfx/send-message socket-id {:message message}])))
+   {:fx [[:dispatch [::wfx/send-message socket-id {:message message}]]
+         [:dispatch [::update-echo-message ""]]]}))
 
-(defn websocket-status
-  []
+;; ---
+;; Subscriptions
+;; ---
+
+(re-frame/reg-sub
+ ::messages
+ (fn [db]
+   (:messages db)))
+
+(re-frame/reg-sub
+ ::echo-message
+ (fn [db]
+   (:echo-message db)))
+
+;; ---
+;; Components
+;; ---
+
+(defn websocket-status-component []
   [:h2 "websocket status"
    [:p
     @(re-frame/subscribe [::wfx/status socket-id])]])
 
-(defn echo-message
+(defn echo-message-component
   [idx message-text]
   ^{:key idx}
   [:li message-text])
 
-(defn send-button
-  []
-  [:button
-   {:on-click
-    (fn [_e]
-      (re-frame/dispatch [::send-echo-message socket-id "hello, world"]))}
-   "Send Message"])
+(defn chat-input-component []
+  (let [echo-message (re-frame/subscribe [::echo-message])]
+    [:div.container-fluid
+     [:input
+      {:value    @echo-message
+       :on-change   #(re-frame/dispatch [::update-echo-message (-> % .-target .-value)])
+       :onKeyPress #(if (= (.-charCode %) 13)
+                      (re-frame/dispatch [::send-echo-message socket-id @echo-message]))}]
+     [:button
+      {:on-click
+       (fn [_e]
+         (re-frame/dispatch [::send-echo-message socket-id @echo-message]))}
+      "Send Message"]]))
 
 (defn echo-view []
   [:div
-   (websocket-status)
-   [:h1 "Echo Messages"
-    [:ul (map-indexed #'echo-message @(re-frame/subscribe [::subs/messages]))]
-    (send-button)]])
+   (websocket-status-component)
+   [:div
+    [:h1 "Echo Messages"]
+    [:ul (map-indexed #'echo-message-component @(re-frame/subscribe [::messages]))
+     (chat-input-component)]]])
+
+;; ---
+;; websocket control
+;; ---
 
 (def socket-options
-  {; optional. defaults to /ws on the current domain. ws if http and wss if https
-   :url    "wss://echo.websocket.org"
-   ; optional. defaults to :edn, options are #{:edn :json :transit-json}
+  {:url    "wss://echo.websocket.org"
    :format :text
-   ; optional. additional event to dispatch after the socket is connected
    :on-connect [::websocket-connected]
-   ; optional. additional event to dispatch if the socket disconnects
    :on-disconnect [::websocket-disconnected]
-   ; tfiala - added this
    :on-message ::ws-incoming-message})
 
 (defn start
